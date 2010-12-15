@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'lib/geokit'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/geokit')
 
 class GeoLocTest < Test::Unit::TestCase #:nodoc: all
   

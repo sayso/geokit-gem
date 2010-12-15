@@ -1,7 +1,7 @@
 require 'test/unit'
-require 'lib/geokit'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/geokit')
 
-class BoundsTest < Test::Unit::TestCase #:nodoc: all
+class BoundsTest < Test::Unit::TestCase
   
   def setup
     # This is the area in Texas

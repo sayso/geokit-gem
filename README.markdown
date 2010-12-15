@@ -3,29 +3,25 @@
 The Geokit gem provides:
 
  * Distance calculations between two points on the earth. Calculate the distance in miles, kilometers, or nautical miles, with all the trigonometry abstracted away by GeoKit.
- * Geocoding from multiple providers. It supports Google, Yahoo, Geocoder.us, and Geocoder.ca geocoders, and others. It provides a uniform response structure from all of them. 
+ * Geocoding from multiple providers. It supports Google geocoder. It provides a uniform response structure from all of them. 
    It also provides a fail-over mechanism, in case your input fails to geocode in one service.
  * Rectangular bounds calculations: is a point within a given rectangular bounds?
  * Heading and midpoint calculations
 
-Combine this gem with the [geokit-rails plugin](http://github.com/andre/geokit-rails/tree/master) to get location-based finders for your Rails app.
-
-* Geokit Documentation at Rubyforge [http://geokit.rubyforge.org](http://geokit.rubyforge.org).
-* Repository at Github: [http://github.com/andre/geokit-gem/tree/master](http://github.com/andre/geokit-gem/tree/master).
-* Follow the Google Group for updates and discussion on Geokit: [http://groups.google.com/group/geokit](http://groups.google.com/group/geokit) 
+* Repository at Github: [http://github.com/bartes/geokit-gem/tree/master](http://github.com/andre/geokit-gem/tree/master).
 
 ## INSTALL
 
-    sudo gem install geokit
+    sudo gem install bartes-geokit
 
 ## QUICK START
 
 		irb> require 'rubygems'
 		irb> require 'geokit'
-		irb> a=Geokit::Geocoders::YahooGeocoder.geocode '140 Market St, San Francisco, CA'
+		irb> a=Geokit::Geocoders::GoogleGeocoder.geocode '140 Market St, San Francisco, CA'
 		irb> a.ll
 		 => 37.79363,-122.396116
-		irb> b=Geokit::Geocoders::YahooGeocoder.geocode '789 Geary St, San Francisco, CA'
+		irb> b=Geokit::Geocoders::GoogleGeocoder.geocode '789 Geary St, San Francisco, CA'
 		irb> b.ll
 		 => 37.786217,-122.41619
 		irb> a.distance_to(b)
@@ -56,21 +52,7 @@ If you're using this gem by itself, here are the configuration options:
 		# is in seconds. 
 		Geokit::Geocoders::request_timeout = 3
 		
-		# These settings are used if web service calls must be routed through a proxy.
-		# These setting can be nil if not needed, otherwise, addr and port must be 
-		# filled in at a minimum.  If the proxy requires authentication, the username
-		# and password can be provided as well.
-		Geokit::Geocoders::proxy_addr = nil
-		Geokit::Geocoders::proxy_port = nil
-		Geokit::Geocoders::proxy_user = nil
-		Geokit::Geocoders::proxy_pass = nil
-		
-		# This is your yahoo application key for the Yahoo Geocoder.
-		# See http://developer.yahoo.com/faq/index.html#appid
-		# and http://developer.yahoo.com/maps/rest/V1/geocode.html
-		Geokit::Geocoders::yahoo = 'REPLACE_WITH_YOUR_YAHOO_KEY'
-		    
-		# This is your Google Maps geocoder key. 
+    # This is your Google Maps geocoder key. 
 		# See http://www.google.com/apis/maps/signup.html
 		# and http://www.google.com/apis/maps/documentation/#Geocoding_Examples
 		Geokit::Geocoders::google = 'REPLACE_WITH_YOUR_GOOGLE_KEY'
@@ -81,54 +63,10 @@ If you're using this gem by itself, here are the configuration options:
 		# You define these keys with a Hash as follows:
 		#Geokit::Geocoders::google = { 'rubyonrails.org' => 'RUBY_ON_RAILS_API_KEY', 'ruby-docs.org' => 'RUBY_DOCS_API_KEY' }
 		    
-		# This is your username and password for geocoder.us.
-		# To use the free service, the value can be set to nil or false.  For 
-		# usage tied to an account, the value should be set to username:password.
-		# See http://geocoder.us
-		# and http://geocoder.us/user/signup
-		Geokit::Geocoders::geocoder_us = false 
-		
-		# This is your authorization key for geocoder.ca.
-		# To use the free service, the value can be set to nil or false.  For 
-		# usage tied to an account, set the value to the key obtained from
-		# Geocoder.ca.
-		# See http://geocoder.ca
-		# and http://geocoder.ca/?register=1
-		Geokit::Geocoders::geocoder_ca = false
-		
-		# require "external_geocoder.rb"
-		# Please see the section "writing your own geocoders" for more information.
-		# Geokit::Geocoders::external_key = 'REPLACE_WITH_YOUR_API_KEY'
-		
-		# This is the order in which the geocoders are called in a failover scenario
-		# If you only want to use a single geocoder, put a single symbol in the array.
-		# Valid symbols are :google, :yahoo, :us, and :ca.
-		# Be aware that there are Terms of Use restrictions on how you can use the 
-		# various geocoders.  Make sure you read up on relevant Terms of Use for each
-		# geocoder you are going to use.
-		Geokit::Geocoders::provider_order = [:google,:us]
-		
-		# The IP provider order. Valid symbols are :ip,:geo_plugin.
-		# As before, make sure you read up on relevant Terms of Use for each.
-		# Geokit::Geocoders::ip_provider_order = [:external,:geo_plugin,:ip]
-
-If you're using this gem with the [geokit-rails plugin](http://github.com/andre/geokit-rails/tree/master), the plugin
-creates a template with these settings and places it in `config/initializers/geokit_config.rb`.
-
 ## SUPPORTED GEOCODERS
-
-### "regular" address geocoders 
-* Yahoo Geocoder - requires an API key.
-* Geocoder.us - may require authentication if performing more than the free request limit.
-* Geocoder.ca - for Canada; may require authentication as well.
-* Geonames - a free geocoder
 
 ### address geocoders that also provide reverse geocoding 
 * Google Geocoder - requires an API key. Also supports multiple results and bounding box/country code biasing.
-
-### IP address geocoders 
-* IP Geocoder - geocodes an IP address using hostip.info's web service.
-* Geoplugin.net -- another IP address geocoder
 
 ### Google Geocoder Tricks
 
@@ -165,13 +103,6 @@ Not it. What we can do is tell the geocoder to return results only from in and a
 		irb> res.full_address
 		=> "Winnetka, California, USA"
 
-
-### The Multigeocoder
-Multi Geocoder - provides failover for the physical location geocoders, and also IP address geocoders. Its configured by setting Geokit::Geocoders::provider_order, and Geokit::Geocoders::ip_provider_order. You should call the Multi-Geocoder with its :geocode method, supplying one address parameter which is either a real street address, or an ip address. For example:
-
-		Geokit::Geocoders::MultiGeocoder.geocode("900 Sycamore Drive")
-
-		Geokit::Geocoders::MultiGeocoder.geocode("12.12.12.12")
 
 ## MULTIPLE RESULTS
 Some geocoding services will return multple results if the there isn't one clear result. 
@@ -233,10 +164,6 @@ You must then also require such extenal file back in your main geokit configurat
 	      private 
 	      def self.do_geocode(address, options = {})
 	        # Main geocoding method
-	      end
-
-	      def self.parse_http_resp(body) # :nodoc:
-	        # Helper method to parse http response. See geokit/geocoders.rb.
 	      end
 	    end
 	

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'test/unit'
-require 'lib/geokit'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/geokit')
 
 class InflectorTest < Test::Unit::TestCase #:nodoc: all
   

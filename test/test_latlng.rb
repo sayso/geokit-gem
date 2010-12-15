@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'lib/geokit'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/geokit')
 require 'mocha'
 
 class LatLngTest < Test::Unit::TestCase #:nodoc: all
@@ -165,20 +165,7 @@ class LatLngTest < Test::Unit::TestCase #:nodoc: all
     assert first.eql?(second)
     assert second.eql?(first)
   end
-  
-  def test_reverse_geocode
-    point = Geokit::LatLng.new(51.4578329, 7.0166848)
-    Geokit::Geocoders::MultiGeocoder.expects(:reverse_geocode).with(point).returns(valid_reverse_geocoding_result)
-    res = point.reverse_geocode
     
-    assert_equal "Nordrhein-Westfalen", res.state
-    assert_equal "Essen", res.city 
-    assert_equal "45127", res.zip
-    assert_equal "51.4578329,7.0166848", res.ll # slightly dif from yahoo
-    assert res.is_us? == false
-    assert_equal "Porscheplatz 1, 45127 Essen, Deutschland", res.full_address #slightly different from yahoo
-  end
-  
   def test_reverse_geocoding_using_specific_geocoder
     point = Geokit::LatLng.new(51.4578329, 7.0166848)
     Geokit::Geocoders::GoogleGeocoder.expects(:reverse_geocode).with(point).returns(valid_reverse_geocoding_result)
