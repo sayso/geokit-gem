@@ -366,6 +366,8 @@ module Geokit
       @success=false
       @precision='unknown'
       @full_address=nil
+      @accuracy=h[:accuracy]
+      
       super(h[:lat],h[:lng])
     end
 
@@ -405,9 +407,10 @@ module Geokit
     alias to_hash hash
 
     # Sets the city after capitalizing each word within the city name.
-    def city=(city)
-      @city = Geokit::Inflector::titleize(city) if city
-    end
+    # TODO need to prevent from removing "-"
+    #def city=(city)
+    #  @city = Geokit::Inflector::titleize(city) if city
+    #end
 
     # Sets the street address after capitalizing each word within the street address.
     def street_address=(address)
