@@ -414,7 +414,7 @@ module FakeGeoRequests
 {
   "name": "3435345345",
   "Status": {
-    "code": 602,
+    "code": 620,
     "request": "geocode"
   }
 }

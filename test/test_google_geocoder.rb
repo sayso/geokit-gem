@@ -107,7 +107,9 @@ class GoogleGeocoderTest < Test::Unit::TestCase
     response = nil
     url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&key=Google&oe=utf-8"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
-    assert !Geokit::Geocoders::GoogleGeocoder.geocode(@google_city_loc).success
+    assert_raise Geokit::InvalidResponseError do
+      Geokit::Geocoders::GoogleGeocoder.geocode(@google_city_loc)
+    end
   end 
   
   def test_multiple_results
@@ -190,6 +192,8 @@ class GoogleGeocoderTest < Test::Unit::TestCase
     response = Yajl::Parser.new.parse(GOOGLE_TOO_MANY)
     url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&key=Google&oe=utf-8"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
-    assert !Geokit::Geocoders::GoogleGeocoder.geocode(@address).success
+    assert_raise Geokit::TooManyQueriesError do
+      Geokit::Geocoders::GoogleGeocoder.geocode(@address)
+    end
   end
 end
