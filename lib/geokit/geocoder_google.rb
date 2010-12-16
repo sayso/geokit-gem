@@ -46,13 +46,33 @@ module Geokit
       # # When biased to an bounding box around California, it will now return the Winnetka neighbourhood, CA
       # bounds = Geokit::Bounds.normalize([34.074081, -118.694401], [34.321129, -118.399487])
       # Geokit::Geocoders::GoogleGeocoder.geocode('Winnetka', :bias => bounds).state # => 'CA'
+      #
+      
+      GOOGLE_STATUS_CODES = {
+        200 => "G_GEO_SUCCESS",
+        # InvalidStatusCodeError
+        400 => "G_GEO_BAD_REQUEST",
+        500 => "G_GEO_SERVER_ERROR",
+        601 => "G_GEO_MISSING_QUERY",
+        # UnableToGeocodeError
+        602 => "G_GEO_UNKNOWN_ADDRESS",
+        603 => "G_GEO_UNAVAILABLE_ADDRESS",
+        604 => "G_GEO_UNKNOWN_DIRECTIONS",
+        # BadKey
+        610 => "G_GEO_BAD_KEY",
+        # TooManyQueriesError
+        620 => "G_GEO_TOO_MANY_QUERIES",
+      }
+      
+
       def self.do_geocode(address, options = {})
         bias_str = options[:bias] ? construct_bias_string_from_options(options[:bias]) : ''
+        lang_str = options[:lang].blank? ? '' :  "&hl=#{options[:lang]}"
         address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
         return GeoLoc.new if address_str.to_s.strip.empty?
-        url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(address_str)}#{bias_str}&key=#{Geokit::Geocoders::google}&oe=utf-8"
+        url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(address_str)}#{bias_str}#{lang_str}&key=#{Geokit::Geocoders::google}&oe=utf-8"
         res = call_geocoder_service(url)
-        return GeoLoc.new if res.nil?
+        raise Geokit::InvalidResponseError if res.nil?
         toGeoLoc(res)        
       end
       
@@ -67,7 +87,8 @@ module Geokit
       end
       
       def self.toGeoLoc(res)
-        if res["Status"]["code"] == 200
+        response_code = res["Status"]["code"]
+        if response_code == 200
           geoloc = nil
           # Google can return multiple results as //Placemark elements. 
           # iterate through each and extract each placemark as a geoloc
@@ -83,12 +104,22 @@ module Geokit
             end  
           end
           return geoloc
-        elsif res["Status"]["code"] == 620
-          logger.info "Google returned a 620 status, too many queries. The given key has gone over the requests limit in the 24 hour period or has submitted too many requests in too short a period of time. If you're sending multiple requests in parallel or in a tight loop, use a timer or pause in your code to make sure you don't send the requests too quickly."
-          return GeoLoc.new
         else
-          logger.info "Google was unable to geocode address: " + res["name"]
-          return GeoLoc.new
+          if [602, 603, 604].include?(response_code)
+            # G_GEO_UNKNOWN_ADDRESS, G_GEO_UNAVAILABLE_ADDRESS, G_GEO_UNKNOWN_DIRECTIONS
+            return nil
+          elsif [400, 500, 601].include?(response_code)
+            # G_GEO_BAD_REQUEST, G_GEO_SERVER_ERROR, G_GEO_MISSING_QUERY, G_GEO_BAD_KEY
+            raise Geokit::InvalidStatusCodeError.new(GOOGLE_STATUS_CODES[response_code])
+          elsif response_code == 620
+            # G_GEO_TOO_MANY_QUERIES
+            raise Geokit::TooManyQueriesError.new(GOOGLE_STATUS_CODES[response_code])
+          elsif response_code == 610
+            # G_GEO_BAD_KEY
+            raise Geokit::BadKeyError.new(GOOGLE_STATUS_CODES[response_code])
+          else
+            raise Geokit::GeokitError
+          end
         end
       #rescue => e
         logger.error "Caught an error during Google geocoding call: #{e.inspect}"

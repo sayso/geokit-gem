@@ -6,6 +6,14 @@ require 'yajl/http_stream'
 
 module Geokit
 
+  class GeokitError < StandardError; end
+  class BadKeyError < GeokitError; end
+  class GeocoderServiceError < GeokitError; end
+  class TimeoutError < GeocoderServiceError; end
+  class InvalidResponseError < GeocoderServiceError; end
+  class InvalidStatusCodeError < GeocoderServiceError; end
+  class TooManyQueriesError < GeocoderServiceError; end
+
   module Geocoders
     @@request_timeout = nil    
     @@google = 'REPLACE_WITH_YOUR_GOOGLE_KEY'
@@ -66,8 +74,10 @@ module Geokit
         Timeout::timeout(Geokit::Geocoders::request_timeout) { return self.do_get(url) } if Geokit::Geocoders::request_timeout   
         logger.info "Getting geocode from #{url}" 
         return self.do_get(url)
-      rescue TimeoutError, Yajl::HttpStream::HttpError
-        return nil  
+      rescue TimeoutError, Timeout::Error
+        raise Geokit::TimeoutError
+      rescue Yajl::HttpStream::HttpError
+        raise Geokit::InvalidResponseError
       end
 
       # Not all geocoders can do reverse geocoding. So, unless the subclass explicitly overrides this method,
