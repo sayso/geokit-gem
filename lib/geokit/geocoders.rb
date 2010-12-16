@@ -99,7 +99,7 @@ module Geokit
       def self.do_get(url) 
         uri = URI.parse(url)
         result = nil
-        Yajl::HttpStream.get(uri) do |data|
+        Yajl::HttpStream.get(uri, {:check_utf8 => false}) do |data|
           result = data
         end
         result
