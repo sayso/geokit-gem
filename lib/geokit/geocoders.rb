@@ -3,7 +3,9 @@ require 'logger'
 require 'yajl'
 require 'uri'
 require 'yajl/http_stream'
-require 'iconv'
+require 'i18n'
+require 'active_support'
+require 'active_support/inflector'
 
 module Geokit
 
@@ -62,8 +64,7 @@ module Geokit
       # nil one with a failed success code.
       def self.geocode(address, options = {})
         if  address.is_a?(String)
-          converted_address = Iconv.iconv('UTF-8//TRANSLIT//IGNORE', 'UTF-8', address)
-          converted_address = converted_address.first if converted_address.is_a?(Array)
+          converted_address = ActiveSupport::Inflector.transliterate(address)
         else
           converted_address = address
         end
