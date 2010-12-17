@@ -69,7 +69,7 @@ module Geokit
         bias_str = options[:bias] ? construct_bias_string_from_options(options[:bias]) : ''
         lang_str = options[:lang].to_s.empty? ? '' :  "&hl=#{options[:lang]}"
         address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
-        return GeoLoc.new if address_str.to_s.strip.empty?
+        return nil if address_str.to_s.strip.empty?
         url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(address_str)}#{bias_str}#{lang_str}&key=#{Geokit::Geocoders::google}&oe=utf-8"
         res = call_geocoder_service(url)
         raise Geokit::InvalidResponseError if res.nil?

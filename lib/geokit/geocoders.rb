@@ -61,7 +61,13 @@ module Geokit
       # are responsible for implementing.  Returns a populated GeoLoc or an
       # nil one with a failed success code.
       def self.geocode(address, options = {})
-        do_geocode(Iconv.iconv('UTF-8//TRANSLIT//IGNORE', 'UTF-8', address).to_s, options)
+        if  address.is_a?(String)
+          converted_address = Iconv.iconv('UTF-8//TRANSLIT//IGNORE', 'UTF-8', address)
+          converted_address = converted_address.first if converted_address.is_a?(Array)
+        else
+          converted_address = address
+        end
+        do_geocode(converted_address, options)
       end  
       # Main method which calls the do_reverse_geocode template method which subclasses
       # are responsible for implementing.  Returns a populated GeoLoc or an
