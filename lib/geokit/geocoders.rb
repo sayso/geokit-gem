@@ -3,6 +3,7 @@ require 'logger'
 require 'yajl'
 require 'uri'
 require 'yajl/http_stream'
+require 'iconv'
 
 module Geokit
 
@@ -58,13 +59,13 @@ module Geokit
 
       # Main method which calls the do_geocode template method which subclasses
       # are responsible for implementing.  Returns a populated GeoLoc or an
-      # empty one with a failed success code.
-      def self.geocode(address, options = {}) 
-        do_geocode(address, options)
+      # nil one with a failed success code.
+      def self.geocode(address, options = {})
+        do_geocode(Iconv.iconv('UTF-8//TRANSLIT//IGNORE', 'UTF-8', address).to_s, options)
       end  
       # Main method which calls the do_reverse_geocode template method which subclasses
       # are responsible for implementing.  Returns a populated GeoLoc or an
-      # empty one with a failed success code.
+      # nil one with a failed success code.
       def self.reverse_geocode(latlng)
         do_reverse_geocode(latlng)
       end
@@ -84,7 +85,7 @@ module Geokit
       # a call to reverse_geocode will return an empty GeoLoc. If you happen to be using MultiGeocoder,
       # this will cause it to failover to the next geocoder, which will hopefully be one which supports reverse geocoding.
       def self.do_reverse_geocode(latlng)
-        return GeoLoc.new
+        return nil
       end
 
       protected
