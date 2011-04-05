@@ -25,6 +25,6 @@ path = File.expand_path(File.dirname(__FILE__))
 $:.unshift path unless $:.include?(path)
 require 'geokit/inflector'
 require 'geokit/mappable'
-require 'geokit/geocoder_google'
+require 'geokit/geocoder_google_v3'
 
 
