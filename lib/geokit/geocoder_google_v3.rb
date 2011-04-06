@@ -160,7 +160,7 @@ module Geokit
           end
         end
         res.full_address = placemark['formatted_address']
-        res.street_address = res.full_address.split(',').first if ['street_address','route'].include?(placemark['types'][0])
+        res.street_address = res.full_address.sub(Regexp.new("^(.*#{res.street})([^,]*)?(.*)$")){|full_addr| "#{$1}#{$2}"} if res.street
 
         # Translate accuracy into Yahoo-style token address, street, zip, zip+4, city, state, country
         # For Google, 1=low accuracy, 8=high accuracy
