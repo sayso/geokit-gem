@@ -74,17 +74,6 @@ module Geokit
        'floor' => 9,
        'room' => 9
      }
-
-#    0 - natural_feature -
-#    3 - - approximate
-#    4 - locality, neighborhood - approximate
-#    5 - -
-#    6 - route - GEOMETRIC_CENTER
-#    7 - -
-#    8 - street_address - rooftop, range interpolated
-
-
-
       
      def self.do_geocode(address, options = {})
         bias_str = options[:bias] ? construct_bias_string_from_options(options[:bias]) : ''
@@ -151,7 +140,7 @@ module Geokit
         address_details = placemark['address_components']
         address_details.each do |add|
           case add['types'][0]
-          when 'county'
+          when 'country'
             res.country_code = add['short_name']
             res.country = add['long_name']
           when 'administrative_area_level_1'
@@ -171,7 +160,7 @@ module Geokit
           end
         end
         res.full_address = placemark['formatted_address']
-        res.street_address = res.full_address.split(',').first if placemark['types'][0] == 'street_address'
+        res.street_address = res.full_address.split(',').first if ['street_address','route'].include?(placemark['types'][0])
 
         # Translate accuracy into Yahoo-style token address, street, zip, zip+4, city, state, country
         # For Google, 1=low accuracy, 8=high accuracy
@@ -192,3 +181,5 @@ module Geokit
     end
   end  
 end
+
+
