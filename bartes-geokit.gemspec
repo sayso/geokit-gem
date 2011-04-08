@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.files = ["Manifest.txt", "README.markdown", "Rakefile", 
              "lib/geokit/geocoders.rb", "lib/geokit.rb", "lib/geokit/mappable.rb", "lib/geokit/inflector.rb", "lib/geokit/geocoder_google.rb",
              "test/fake_geo_requests.rb","test/test_base_geocoder.rb", "test/test_bounds.rb", "test/test_geoloc.rb", "test/test_google_geocoder.rb", "test/test_latlng.rb"]
-  s.has_rdoc = false
   s.homepage = %q{http://github.com/bartes/geokit-gem}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
