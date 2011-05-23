@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sayso-geokit}
-  s.version = "1.5.0.3.001"
+  s.version = "1.5.0.3.002"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["SaySo"]
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email = ["sayso@truvolabs.com"]
   s.extra_rdoc_files = ["Manifest.txt", "README.markdown"]
   s.files = ["Manifest.txt", "README.markdown", "Rakefile", 
-             "lib/geokit/geocoders.rb", "lib/geokit.rb", "lib/geokit/mappable.rb", "lib/geokit/inflector.rb", "lib/geokit/geocoder_google.rb",
+             "lib/geokit/geocoders.rb", "lib/geokit/geocoders_v3.rb", "lib/geokit.rb", "lib/geokit/mappable.rb", "lib/geokit/inflector.rb", "lib/geokit/geocoder_google.rb", "lib/geokit/geocoder_google_v3.rb",
              "test/fake_geo_requests.rb","test/test_base_geocoder.rb", "test/test_bounds.rb", "test/test_geoloc.rb", "test/test_google_geocoder.rb", "test/test_latlng.rb"]
   s.homepage = %q{http://github.com/sayso/geokit-gem}
   s.require_paths = ["lib"]
