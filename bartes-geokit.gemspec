@@ -1,19 +1,19 @@
 # encoding: utf-8
 
 Gem::Specification.new do |s|
-  s.name = %q{bartes-geokit}
-  s.version = "1.5.0.3"
+  s.name = %q{sayso-geokit}
+  s.version = "1.5.0.3.001"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Andre Lewis and Bill Eisenhauer, Bartosz Knapik"]
+  s.authors = ["SaySo"]
   s.date = %q{2010-12-10}
-  s.description = %q{Geokit Gem}
-  s.email = ["bartosz.knapik@llp.pl"]
+  s.description = %q{Geokit Gem - forked and gemified for sayso}
+  s.email = ["sayso@truvolabs.com"]
   s.extra_rdoc_files = ["Manifest.txt", "README.markdown"]
   s.files = ["Manifest.txt", "README.markdown", "Rakefile", 
              "lib/geokit/geocoders.rb", "lib/geokit.rb", "lib/geokit/mappable.rb", "lib/geokit/inflector.rb", "lib/geokit/geocoder_google.rb",
              "test/fake_geo_requests.rb","test/test_base_geocoder.rb", "test/test_bounds.rb", "test/test_geoloc.rb", "test/test_google_geocoder.rb", "test/test_latlng.rb"]
-  s.homepage = %q{http://github.com/bartes/geokit-gem}
+  s.homepage = %q{http://github.com/sayso/geokit-gem}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{none}
