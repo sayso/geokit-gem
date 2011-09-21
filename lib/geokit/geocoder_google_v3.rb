@@ -164,7 +164,7 @@ module Geokit
 
         # Translate accuracy into Yahoo-style token address, street, zip, zip+4, city, state, country
         # For Google, 1=low accuracy, 8=high accuracy
-        res.accuracy = ACCURACY[placemark['types'][0]] || 0
+        res.accuracy = (ACCURACY[placemark['types'][0]]).to_i # if ACCURACY[placemark['types'][0]] is empty or nil, 0 will be returned
         res.precision = %w{unknown country state state city zip zip+4 street address building}[res.accuracy]
 
         # google returns a set of suggested boundaries for the geocoded result
